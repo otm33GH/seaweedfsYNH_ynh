@@ -68,20 +68,17 @@ ram.runtime = "200M"
     # This will pre-fetch the asset which can then be deployed during the install/upgrade scripts with :
     #    ynh_setup_source --dest_dir="$install_dir"
     # You can also define other assets than "main" and add --source_id="foobar" in the previous command
-   # url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.03/linux_amd64.tar.gz"
-   # sha256 = "31e2f6a9ac6d61c08a2681dd2c2dcbdeecf6d6fc539b56a2e8f018b1309e5cc8"       
-   #url = "https://github.com/baserow/baserow/archive/refs/tags/2.0.1.tar.gz" 
-   #sha256 = "303f4e429f8885bbb91b96631441e3ce46d7841da290c8c2299248ccd394c14a"
-   #autoupdate.strategy = "latest_github_tag"
+   url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.03/linux_amd64.tar.gz"
+   sha256 = "31e2f6a9ac6d61c08a2681dd2c2dcbdeecf6d6fc539b56a2e8f018b1309e5cc8"       
+   autoupdate.strategy = "latest_github_tag"
+   in_subdir = false
    
-   url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.03/linux_amd64_full.tar.gz"
-   sha256 = "e45c3beb2052a4a4322fa5fe47d9b1457f899767ffdff575ab0c68d2e472b386"
+   # url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.03/linux_amd64_full.tar.gz"
+   # sha256 = "e45c3beb2052a4a4322fa5fe47d9b1457f899767ffdff575ab0c68d2e472b386"
    #format = "tar.gz"
    #extract = true
-   autoupdate.strategy = "latest_github_tag"
-   in_subdir = false   
    # autoupdate.strategy = "latest_github_tag"
-
+   
     [resources.system_user]
 
     [resources.install_dir]
