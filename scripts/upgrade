@@ -31,7 +31,7 @@ ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 ynh_script_progression "Upgrading source files..."
 
 mkdir "/tmp/${app}-workers"
-cp -a "$install_dir/worker@*" "/tmp/${app}-workers/"
+cp -a $install_dir/worker@* "/tmp/${app}-workers/"
 
 
 ynh_setup_source --dest_dir="$install_dir" --full_replace=1
