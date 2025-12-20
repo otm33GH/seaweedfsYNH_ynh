@@ -10,6 +10,8 @@ source /usr/share/yunohost/helpers
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
+next_index=1
+
 ynh_script_progression "Stopping $app's systemd service..."
 
 ynh_systemctl --service="$app-master" --action="stop" --log_path="systemd"
@@ -19,8 +21,10 @@ ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="
 done
 ynh_systemctl --service="$app-filer" --action="stop" --log_path="systemd"
 ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
+# Stop and remove workers
 for index_worker in "${worker_index[@]}"; do
 ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
+yunohost service remove "$app-worker@$index_worker"
 done
 
 ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
@@ -31,14 +35,11 @@ ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 ynh_script_progression "Upgrading source files..."
 
 mkdir "/tmp/${app}-workers"
-#cp -a $install_dir/worker@* "/tmp/${app}-workers/"
-
 
 ynh_setup_source --dest_dir="$install_dir" --full_replace=1
 
-#cp -a "/tmp/${app}-workers/." "$install_dir/"
-#ynh_safe_rm "/tmp/${app}-workers/"
 chown -R "$app:$app" "$install_dir"
+
 #=================================================
 # CONFIG FILES
 #=================================================
@@ -60,9 +61,11 @@ touch /var/log/$app/$app-filer.log
 for index_volume in "${volume_index[@]}"; do
 touch /var/log/$app/$app-volume@$index_volume.log
 done
-for index_worker in "${worker_index[@]}"; do
-touch /var/log/$app/$app-volume@$index_worker.log
-done
+
+# recreate default worker
+ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
+yunohost service add "$app-worker@$next_index" --description="SeaweedFS worker@$next_index" --log="/var/log/$app/$app-worker@${next_index}.log"
+ynh_systemctl --service="$app-worker@$next_index" --action="start"
 
 touch /var/log/$app/$app-admin.log
 
