@@ -38,7 +38,7 @@ ynh_setup_source --dest_dir="$install_dir" --full_replace=1
 
 cp -a "/tmp/${app}-workers/." "$install_dir/"
 ynh_safe_rm "/tmp/${app}-workers/"
-
+chown -R "$app:$app" "$install_dir"
 #=================================================
 # CONFIG FILES
 #=================================================
