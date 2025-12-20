@@ -30,10 +30,6 @@ for index_volume in "${volume_index[@]}"; do
 ynh_backup "/etc/systemd/system/$app-volume@$index_volume.service"
 done
 
-for index_worker in "${worker_index[@]}"; do
-ynh_backup "/etc/systemd/system/$app-worker@$index_worker.service"
-done
-
 ynh_backup "/etc/systemd/system/$app-admin.service"
 ynh_backup "/etc/systemd/system/$app-s3.service"
 
