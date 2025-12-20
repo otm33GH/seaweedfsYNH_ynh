@@ -7,7 +7,7 @@ name = "SeaweedFS"
 description.en = "SeaweedFS is a versatile and efficient storage system"
 description.fr = "SeaweedFS is a versatile and efficient storage system"
 
-version = "1.0~ynh1"
+version = "4.03~ynh1"
 
 maintainers = [""]
 
