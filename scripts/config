@@ -29,22 +29,6 @@ set__upload_max_size() {
 #=================================================
 # ADD VOLUME SERVERS
 #=================================================
-set__extra_volume_port() {
-test -n "$extra_volume_port" || ynh_die "You must provide a port."
-while true; do
-  if ss --numeric --listening --tcp --udp | awk '{print$5}' | grep --quiet --extended-regexp ":$extra_volume_port$"; then
-    ynh_print_info "$extra_volume_port is already in use. Chosing another port..."
-    extra_volume_port=$((extra_volume_port + 1))
-  elif grep -q "port: '$extra_volume_port'" /etc/yunohost/apps/*/settings.yml; then
-    ynh_print_info "$extra_volume_port is already in use. Chosing another port..."
-    extra_volume_port=$((extra_volume_port + 1))
-else
-    ynh_print_info "Allocating $extra_volume_port for the volume."
-    echo "$extra_volume_port"
-    return 0
-fi
-done
-}
 
 run__extra_volume_add() {
 
