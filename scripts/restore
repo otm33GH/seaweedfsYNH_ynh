@@ -107,7 +107,10 @@ done
 ynh_systemctl --service="$app-admin" --action="start"
 
 ynh_systemctl --service=nginx --action=reload
-
+pushd "$install_dir"
+sleep 5
+mv worker.id worker@${next_index}.id
+popd
 #=================================================
 # END OF SCRIPT
 #=================================================
