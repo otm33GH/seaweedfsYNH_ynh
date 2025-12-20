@@ -55,7 +55,7 @@ last_index=$(ls /etc/systemd/system/ | grep -oP "^${app}-volume@\d+\.service\$" 
 next_index=$(( ${last_index:-0} + 1 ))
 
 ynh_config_add_systemd --service="$app-volume@${next_index}" --template="extra_volume.service"
-yunohost service add "$app-volume@${next_index}" --description="SeaweedFS Volume ${next_index}" --log="/var/log/$app/$app-volume.log"
+yunohost service add "$app-volume@${next_index}" --description="SeaweedFS Volume ${next_index}" --log="/var/log/$app/$app-volume@${next_index}.log"
 systemctl daemon-reload
 ynh_app_setting_set --key="$app-volume@${next_index}_port" --value="$extra_volume_port"
 ynh_systemctl --service="$app-volume@${next_index}" --action="start"
