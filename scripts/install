@@ -21,10 +21,7 @@ ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
-# inhibit worker.id to allow adding multiple workers ?
-pushd "$install_dir"
-mv worker.id worker.id.bak
-popd
+
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
@@ -72,6 +69,11 @@ ynh_config_add_logrotate
 
 ynh_config_add_nginx
 ynh_systemctl --service=nginx --action=reload
+
+# inhibit worker.id to allow adding multiple workers ?
+#pushd "$install_dir"
+#mv worker.id worker.id.bak
+#popd
 
 #=================================================
 # END OF SCRIPT
