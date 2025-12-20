@@ -22,9 +22,9 @@ ynh_script_progression "Setting up source files..."
 ynh_setup_source --dest_dir="$install_dir"
 
 # inhibit worker.id to allow adding multiple workers ?
-pushd
-mv worker.id worker.id.bak
-popd
+#pushd
+#mv worker.id worker.id.bak
+#popd
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
