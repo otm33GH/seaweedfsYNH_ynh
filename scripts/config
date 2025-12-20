@@ -50,7 +50,7 @@ fi
 done
 
 ## create volume service
-
+test -n "${extra_volume_dir}" || ynh_die "You must provide a valid path."
 last_index=$(ls /etc/systemd/system/ | grep -oP "^${app}-volume@\d+\.service\$" | grep -oP "\d+" | sort -n | tail -1)
 next_index=$(( ${last_index:-0} + 1 ))
 
