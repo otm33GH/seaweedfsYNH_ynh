@@ -33,7 +33,8 @@ ask.en = "path to datadir"
 ask.fr = "Chemin du dossier à ajouter"
 type = "path"
 bind = "null"
-
+help.fr = "Attribuez les bonnes permissions à ce dossier : chown -R seaweedfs:seaweedfs /your/data/dir"
+help.fr = "Set the right permissions to this directory : chown -R seaweedfs:seaweedfs /your/data/dir"
 
 [main.volume.extra_volume_port]
 ask.en = "Choose a port between 8081 and 8091"
