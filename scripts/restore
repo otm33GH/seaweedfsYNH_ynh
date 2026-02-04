@@ -15,20 +15,14 @@ ynh_script_progression "Restoring the app main directory..."
 
 ynh_restore "$install_dir"
 
-### $install_dir will automatically be initialized with some decent
-### permissions by default... however, you may need to recursively reapply
-### ownership to all files such as after the ynh_setup_source step
-chown -R "$app:www-data" "$install_dir"
 next_index=1
+
 #=================================================
 # RESTORE THE DATA DIRECTORY
 #=================================================
 ynh_script_progression "Restoring the data directory..."
 
-#ynh_restore "$data_dir"
-
-### (Same as for install dir)
-chown -R "$app:$app" "$data_dir"
+ynh_restore "$data_dir"
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATION
@@ -76,14 +70,14 @@ yunohost service add "$app-master" --description="SeaweedFS Master" --log="/var/
 yunohost service add "$app-filer" --description="SeaweedFS Filer" --log="/var/log/$app/$app-filer.log"
 
 for index_volume in "${volume_index[@]}"; do
-yunohost service add "$app-volume@$index_volume" --description="SeaweedFS volume@$index_volume" --log="/var/log/$app/$app-volume@$index_volume.log"
+  yunohost service add "$app-volume@$index_volume" --description="SeaweedFS volume@$index_volume" --log="/var/log/$app/$app-volume@$index_volume.log"
 done
+
 for index_worker in "${worker_index[@]}"; do
-yunohost service add "$app-worker@$index_worker" --description="SeaweedFS worker@$index_worker" --log="/var/log/$app/$app-worker@$index_worker.log"
+  yunohost service add "$app-worker@$index_worker" --description="SeaweedFS worker@$index_worker" --log="/var/log/$app/$app-worker@$index_worker.log"
 done
 yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var/log/$app/$app-admin.log"
 yunohost service add "$app-s3" --description="SeaweedFS S3 API" --log="/var/log/$app/$app-s3.log"
-
 
 #=================================================
 # RELOAD NGINX AND THE APP SERVICES
@@ -93,7 +87,7 @@ ynh_script_progression "Reloading $app's services and NGINX web server..."
 ynh_systemctl --service="$app-master" --action="start"
 
 for index_volume in "${volume_index[@]}"; do
-ynh_systemctl --service="$app-volume@$index_volume" --action="start"
+  ynh_systemctl --service="$app-volume@$index_volume" --action="start"
 done
 
 ynh_systemctl --service="$app-filer" --action="start"
@@ -108,6 +102,7 @@ pushd "$install_dir"
 sleep 5
 mv worker.id worker@${next_index}.id
 popd
+
 #=================================================
 # END OF SCRIPT
 #=================================================
