@@ -2,8 +2,8 @@ packaging_format = 2
 
 id = "seaweedfs"
 name = "SeaweedFS"
-description.en = "SeaweedFS is a versatile and efficient storage system"
-description.fr = "SeaweedFS is a versatile and efficient storage system"
+description.en = "Versatile and efficient storage system"
+description.fr = "Système de stockage polyvalent et efficace"
 
 version = "4.07~ynh1"
 

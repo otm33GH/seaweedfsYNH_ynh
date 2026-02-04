@@ -27,14 +27,13 @@ ynh_backup "/etc/systemd/system/$app-master.service"
 ynh_backup "/etc/systemd/system/$app-filer.service"
 
 for index_volume in "${volume_index[@]}"; do
-ynh_backup "/etc/systemd/system/$app-volume@$index_volume.service"
+	ynh_backup "/etc/systemd/system/$app-volume@$index_volume.service"
 done
 
 ynh_backup "/etc/systemd/system/$app-admin.service"
 ynh_backup "/etc/systemd/system/$app-s3.service"
 
 ynh_backup "/etc/logrotate.d/$app"
-
 
 #=================================================
 # END OF SCRIPT

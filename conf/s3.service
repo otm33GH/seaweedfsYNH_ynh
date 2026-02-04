@@ -14,8 +14,6 @@ ExecStart=__INSTALL_DIR__/./weed s3 -port=__PORT_API__ -filer=localhost:__PORT_F
 StandardOutput=append:/var/log/__APP__/__APP__-s3.log
 StandardError=inherit
 
-### Depending on specificities of your service/app, you may need to tweak these
-### .. but this should be a good baseline
 # Sandboxing options to harden security
 # Details for these options: https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 NoNewPrivileges=yes

@@ -10,6 +10,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
+
 next_index=1
 
 ynh_script_progression "Stopping $app's systemd service..."
