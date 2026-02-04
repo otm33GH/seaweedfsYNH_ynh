@@ -85,7 +85,7 @@ done
 yunohost service add "$app-filer" --description="SeaweedFS Filer" --log="/var/log/$app/$app-filer.log"
 yunohost service add "$app-s3" --description="SeaweedFS S3 API" --log="/var/log/$app/$app-s3.log"
 for index_worker in "${worker_index[@]}"; do
-	yunohost service add "$app-worker@$index_worker" --description="SeaweedFS worker@$index_volume" --log="/var/log/$app/$app-worker@$index_worker.log"
+	yunohost service add "$app-worker@$index_worker" --description="SeaweedFS worker@$index_worker" --log="/var/log/$app/$app-worker@$index_worker.log"
 done
 yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var/log/$app/$app-admin.log"
 ynh_systemctl --service="$app-master" --action="start"
