@@ -7,7 +7,7 @@ Type=simple
 User=__APP__
 Group=__APP__
 WorkingDirectory=__INSTALL_DIR__/
-ExecStart=__INSTALL_DIR__/weed server -dir=__DATA_DIR__ mserver="127.0.0.1" -port=__PORT__
+ExecStart=__INSTALL_DIR__/weed server -dir=__DATA_DIR__ -s3 -ip.bind="127.0.0.1" -port=__PORT__
 
 # Sandboxing options to harden security
 # Details for these options: https://www.freedesktop.org/software/systemd/man/systemd.exec.html
