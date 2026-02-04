@@ -34,10 +34,9 @@ ynh_script_progression "Restoring $app's services..."
   yunohost service add "$app-master" --description="SeaweedFS Master" --log="/var/log/$app/$app-master.log"
 
 #### b. volumes
-  for index_volume in "${volume_index[@]}"; do
-    ynh_restore "/etc/systemd/system/$app-volume@$index_volume.service"
-    systemctl enable "$app-volume@$index_volume.service" --quiet
-    yunohost service add "$app-volume@$index_volume" --description="SeaweedFS volume@$index_volume" --log="/var/log/$app/$app-volume@$index_volume.log"
+    ynh_restore "/etc/systemd/system/$app-volume.service"
+    systemctl enable "$app-volume@.service" --quiet
+    yunohost service add "$app-volume" --description="SeaweedFS volume" --log="/var/log/$app/$app-volume.log"
   done
 
 #### c. filer
@@ -50,10 +49,10 @@ ynh_script_progression "Restoring $app's services..."
   systemctl enable "$app-s3.service" --quiet
   yunohost service add "$app-s3" --description="SeaweedFS S3 API" --log="/var/log/$app/$app-s3.log"
 
-#### e. recreate default worker
+#### e. worker
 
-  ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
-  yunohost service add "$app-worker@$next_index" --description="SeaweedFS worker@$next_index" --log="/var/log/$app/$app-worker@${next_index}.log"
+  ynh_config_add_systemd --service="$app-worker" --template="worker.service"
+  yunohost service add "$app-worker" --description="SeaweedFS worker" --log="/var/log/$app/$app-worker.log"
   yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var/log/$app/$app-admin.log"
 
 #### f. admin
@@ -71,23 +70,18 @@ chown -R $app:$app /var/log/$app/
 ynh_script_progression "Reloading $app's services and NGINX web server..."
 
 ynh_systemctl --service="$app-master" --action="start"
+  ynh_systemctl --service="$app-volume" --action="start"
 
-for index_volume in "${volume_index[@]}"; do
-  ynh_systemctl --service="$app-volume@$index_volume" --action="start"
-done
 
 ynh_systemctl --service="$app-filer" --action="start"
 ynh_systemctl --service="$app-s3" --action="start"
 
-ynh_systemctl --service="$app-worker@$next_index" --action="start"
+ynh_systemctl --service="$app-worker" --action="start"
 
 ynh_systemctl --service="$app-admin" --action="start"
 
 ynh_systemctl --service=nginx --action=reload
-pushd "$install_dir"
-sleep 5
-mv worker.id worker@${next_index}.id
-popd
+
 
 #=================================================
 # END OF SCRIPT
