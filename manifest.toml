@@ -10,13 +10,13 @@ version = "4.07~ynh1"
 maintainers = [""]
 
 [upstream]
-license = "Apache License 2.0" # you can see the available licenses identifiers list here: https://spdx.org/licenses/
+license = "Apache-2.0"
 website = "https://seaweedfs.com/"
 userdoc = "https://github.com/seaweedfs/seaweedfs/wiki"
 code = "https://github.com/seaweedfs/seaweedfs"
 
 [integration]
-yunohost = ">= 12.0.9"
+yunohost = ">= 12.1.38"
 helpers_version = "2.1"
 architectures = ['amd64']
 multi_instance = false
@@ -40,11 +40,9 @@ ram.runtime = "200M"
     [resources.sources.main]
 
    url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.07/linux_amd64.tar.gz"
-   sha256 = "61c8a132c6753cc6726ab6dcc761e0fb2ae2bf7310b1276e82427f4a33dc2a7b"       
+   sha256 = "61c8a132c6753cc6726ab6dcc761e0fb2ae2bf7310b1276e82427f4a33dc2a7b"
    autoupdate.strategy = "latest_github_tag"
    in_subdir = false
-   
-
    
     [resources.system_user]
 
@@ -66,4 +64,3 @@ ram.runtime = "200M"
     filer.default = 8888
     volume.default = 8080
     api.default = 8333 # port pour s3
-    

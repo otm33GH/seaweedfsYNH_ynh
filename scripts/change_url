@@ -31,8 +31,10 @@ ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 # MODIFY URL IN NGINX CONF
 #=================================================
 ynh_script_progression "Updating NGINX web server configuration..."
+
 # this will most likely adjust NGINX config correctly
 ynh_config_change_url_nginx
+
 #=================================================
 # SPECIFIC MODIFICATIONS
 #=================================================
