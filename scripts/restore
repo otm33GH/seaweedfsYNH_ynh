@@ -17,6 +17,7 @@ ynh_restore "$install_dir"
 
 next_index=1
 
+chown -R "$app:$app" "$data_dir"
 #=================================================
 # RESTORE SYSTEM CONFIGURATION
 #=================================================
