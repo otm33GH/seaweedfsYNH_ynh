@@ -4,39 +4,39 @@ It shall NOT be edited by hand.
 -->
 
 <h1>
-  <img src="https://raw.githubusercontent.com/YunoHost/apps/main/logos/seaweedf.png" width="32px" alt="Logo of SeaweedFS">
+  <img src="https://raw.githubusercontent.com/YunoHost/apps/main/logos/seaweedfs.png" width="32px" alt="Logo of SeaweedFS">
   SeaweedFS, packaged for YunoHost
 </h1>
 
-Fast distributed storage system
+SeaweedFS is a versatile and efficient storage system
 
 [![🌐 Official app website](https://img.shields.io/badge/Official_app_website-darkgreen?style=for-the-badge)](https://seaweedfs.com/)
-[![Version: 4.09~ynh1](https://img.shields.io/badge/Version-4.09~ynh1-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/seaweedf/)
+[![Version: 4.03~ynh1](https://img.shields.io/badge/Version-4.03~ynh1-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/seaweedfs/)
 
 <div align="center">
-<a href="https://apps.yunohost.org/app/seaweedf"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
-<a href="https://github.com/YunoHost-Apps/seaweedf_ynh/issues"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_report_an_issue.svg"/></a>
+<a href="https://apps.yunohost.org/app/seaweedfs"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
+<a href="https://github.com/YunoHost-Apps/seaweedfs_ynh/issues"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_report_an_issue.svg"/></a>
 </div>
 
 
 ## Screenshots
-![Screenshot of SeaweedFS](./doc/screenshots/screenshot.png)
+![Screenshot of SeaweedFS](./doc/screenshots/example.jpg)
 
 ## 📦 Developer info
 
-[![Automatic tests level](https://apps.yunohost.org/badge/cilevel/seaweedf)](https://ci-apps.yunohost.org/ci/apps/seaweedf/)
+[![Automatic tests level](https://apps.yunohost.org/badge/cilevel/seaweedfs)](https://ci-apps.yunohost.org/ci/apps/seaweedfs/)
 
 🛠️ Upstream SeaweedFS repository: <https://github.com/seaweedfs/seaweedfs>
 
-Pull request are welcome and should target the [`testing` branch](https://github.com/YunoHost-Apps/seaweedf_ynh/tree/testing).
+Pull request are welcome and should target the [`testing` branch](https://github.com/YunoHost-Apps/seaweedfs_ynh/tree/testing).
 
 The `testing` branch can be tested using:
 ```
 # fresh install:
-sudo yunohost app install https://github.com/YunoHost-Apps/seaweedf_ynh/tree/testing
+sudo yunohost app install https://github.com/YunoHost-Apps/seaweedfs_ynh/tree/testing
 
 # upgrade an existing install:
-sudo yunohost app upgrade seaweedf -u https://github.com/YunoHost-Apps/seaweedf_ynh/tree/testing
+sudo yunohost app upgrade seaweedfs -u https://github.com/YunoHost-Apps/seaweedfs_ynh/tree/testing
 ```
 
 ### 📚 App packaging documentation
