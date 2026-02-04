@@ -1,1 +1,1 @@
-Ceci est une fausse description des fonctionalités de l'app
+SeaweedFS est un système de stockage distribué rapide pour les blobs, les objets, les fichiers et les lacs de données, pouvant accueillir des milliards de fichiers ! Le stockage de blobs dispose d'une recherche sur disque O(1) et d'une hiérarchisation dans le cloud. Filer prend en charge Cloud Drive, la réplication xDC, Kubernetes, le montage POSIX FUSE, l'API S3, la passerelle S3, Hadoop, WebDAV, le chiffrement et le codage d'effacement.
