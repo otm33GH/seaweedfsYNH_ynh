@@ -1,10 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
-# Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
@@ -26,11 +21,19 @@ ynh_backup "$data_dir"
 # BACKUP SYSTEM CONFIGURATION
 #=================================================
 
-# Backup the NGINX configuration
 ynh_backup "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-# Backup the systemd service unit
-ynh_backup "/etc/systemd/system/$app.service"
+ynh_backup "/etc/systemd/system/$app-master.service"
+ynh_backup "/etc/systemd/system/$app-filer.service"
+
+for index_volume in "${volume_index[@]}"; do
+	ynh_backup "/etc/systemd/system/$app-volume@$index_volume.service"
+done
+
+ynh_backup "/etc/systemd/system/$app-admin.service"
+ynh_backup "/etc/systemd/system/$app-s3.service"
+
+ynh_backup "/etc/logrotate.d/$app"
 
 #=================================================
 # END OF SCRIPT

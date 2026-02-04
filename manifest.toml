@@ -1,33 +1,32 @@
-#:schema https://raw.githubusercontent.com/YunoHost/apps/main/schemas/manifest.v2.schema.json
-
 packaging_format = 2
 
-id = "seaweedf"
+id = "seaweedfs"
 name = "SeaweedFS"
-description.en = "Fast distributed storage system"
-description.fr = "Système de stockage distribué rapide"
+description.en = "Versatile and efficient storage system"
+description.fr = "Système de stockage polyvalent et efficace"
 
-version = "4.09~ynh1"
+version = "4.07~ynh1"
 
-maintainers = []
+maintainers = [ ]
 
 [upstream]
 license = "Apache-2.0"
 website = "https://seaweedfs.com/"
+userdoc = "https://github.com/seaweedfs/seaweedfs/wiki"
 code = "https://github.com/seaweedfs/seaweedfs"
 
 [integration]
 yunohost = ">= 12.1.38"
 helpers_version = "2.1"
-architectures = "all"
-multi_instance = true
+architectures = ['amd64']
+multi_instance = false
 
 ldap = false
-sso =false
+sso = false
 
-disk = "50M"
-ram.build = "50M"
-ram.runtime = "50M"
+disk = "200M"
+ram.build = "200M"
+ram.runtime = "200M"
 
 [install]
     [install.domain]
@@ -36,26 +35,32 @@ ram.runtime = "50M"
     [install.init_main_permission]
     type = "group"
     default = "visitors"
-
+   
 [resources]
-
-    [resources.sources]
-
     [resources.sources.main]
-    rename = "weed"
-    in_subdir = false
-    extract = true
-    url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.09/linux_amd64_full.tar.gz"
-    sha256 = "1d7152f913124b96dc9489644f3b045bec19137d21d342d4b373d8ba714ad5db"
-    autoupdate.strategy = "latest_github_release"
 
+   url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.07/linux_amd64.tar.gz"
+   sha256 = "61c8a132c6753cc6726ab6dcc761e0fb2ae2bf7310b1276e82427f4a33dc2a7b"
+   autoupdate.strategy = "latest_github_tag"
+   in_subdir = false
+   
     [resources.system_user]
 
     [resources.install_dir]
 
     [resources.data_dir]
+    subdirs = ["datadir"]
 
     [resources.permissions]
-    main.url = "/"
 
+    main.url = "/"
+    admin.url = "/admin"
+    admin.allowed = "admins"
+    admin.auth_header = false
+    
     [resources.ports]
+    admin.default = 23646
+    master.default = 9333
+    filer.default = 8888
+    volume.default = 8080
+    api.default = 8333 # port pour s3
