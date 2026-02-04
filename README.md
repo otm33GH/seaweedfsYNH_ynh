@@ -20,7 +20,6 @@ Versatile and efficient storage system
 
 
 ## Screenshots
-![Screenshot of SeaweedFS](./doc/screenshots/example.jpg)
 ![Screenshot of SeaweedFS](./doc/screenshots/screenshot.png)
 
 ## 📦 Developer info
