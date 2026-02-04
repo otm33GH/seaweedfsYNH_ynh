@@ -22,7 +22,7 @@ next_index=1
 #=================================================
 ynh_script_progression "Restoring the data directory..."
 
-ynh_restore "$data_dir"
+# ynh_restore "$data_dir"
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATION
