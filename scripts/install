@@ -67,9 +67,6 @@ ynh_config_add_nginx
 
 ynh_systemctl --service=nginx --action=reload
 
-sleep 5
-
-
 
 #=================================================
 # END OF SCRIPT
