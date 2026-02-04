@@ -5,7 +5,6 @@ name.en = "Configuration panel"
 name.fr = "Panneau de configuration"
 services = ["__APP__-master", "__APP__-admin"]
 
-
 [main.limit_size]
 name.en = "Upload limit size"
 name.fr = "Téléchargement de fichiers"
@@ -22,11 +21,9 @@ ask.en = "Size limit file upload (Mb)"
 type = "number"
 bind = "null"
 
-
 [main.volume]
 name.en = "Add a volume server"
 name.fr = "Ajouter un pod volume"
-
 
 [main.volume.extra_volume_dir]
 ask.en = "path to datadir"
@@ -42,11 +39,9 @@ ask.en = "Add volume"
 style = "success"
 type = "button"
 
-
 [main.remove_volume]
 name.en = "Remove volume server"
 name.fr = "Supprimer un pod volume"
-
 
 [main.remove_volume.volume_id]
 ask.fr = "Numéro du volume à supprimer"
@@ -64,7 +59,6 @@ style = "danger"
 name.en = "Add a worker pod"
 name.fr = "Ajouter un pod worker"
 
-
 [main.worker.add_worker]
 ask.fr = "Ajouter un worker"
 ask.en = "Add worker"
@@ -74,7 +68,6 @@ type = "button"
 [main.remove_worker]
 name.en = "Remove worker pod"
 name.fr = "Supprimer un pod worker"
-
 
 [main.remove_worker.worker_id]
 ask.fr = "Numéro du worker à supprimer"
