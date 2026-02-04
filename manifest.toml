@@ -7,7 +7,7 @@ description.fr = "Système de stockage polyvalent et efficace"
 
 version = "4.07~ynh1"
 
-maintainers = [""]
+maintainers = [ ]
 
 [upstream]
 license = "Apache-2.0"
