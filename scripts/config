@@ -1,96 +1,107 @@
-#!/bin/bash
-# In simple cases, you don't need a config script.
-
-# With a simple config_panel.toml, you can write in the app settings, in the
-# upstream config file or replace complete files (logo ...) and restart services.
-
-# The config scripts allows you to go further, to handle specific cases
-# (validation of several interdependent fields, specific getter/setter for a value,
-# display dynamic informations or choices, pre-loading of config type .cube... ).
 
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
 
 source /usr/share/yunohost/helpers
-
 ynh_abort_if_errors
 
 #=================================================
 # RETRIEVE ARGUMENTS
 #=================================================
 
-install_dir=$(ynh_app_setting_get --key=install_dir)
 
-#=================================================
-# SPECIFIC GETTERS FOR TOML SHORT KEY
-#=================================================
-
-get__amount() {
-    # Here we can imagine to have an API call to stripe to know the amount of donation during a month
-    local amount=200
-
-    # It's possible to change some properties of the question by overriding it:
-    if [ "$amount" -gt 100 ]; then
-    cat << EOF
-style: success
-value: $amount
-ask:
-  en: A lot of donation this month: **$amount €**
-EOF
-    else
-    cat << EOF
-style: danger
-value: $amount
-ask:
-  en: Not so much donation this month: $amount €
-EOF
-    fi
-}
-
-get__prices() {
-    local prices
-    prices="$(grep "DONATION\['" "$install_dir/settings.py" | sed -r "s@^DONATION\['([^']*)'\]\['([^']*)'\] = '([^']*)'@\1/\2/\3@g" | sed -z 's/\n/,/g;s/,$/\n/')"
-    if [ "$prices" == "," ]; then
-        # Return YNH_NULL if you prefer to not return a value at all.
-        echo YNH_NULL
-    else
-        echo "$prices"
-    fi
+get__upload_max_size() {
+ynh_app_setting_get --key=upload_max_size
 }
 
 #=================================================
-# SPECIFIC VALIDATORS FOR TOML SHORT KEYS
+# UPLOAD MAX SIZE
 #=================================================
-validate__publishable_key() {
 
-    # We can imagine here we test if the key is really a publishable key
-    (is_secret_key "$publishable_key") &&
-        echo 'This key seems to be a secret key'
+set__upload_max_size() {
+    ynh_replace --match='client_max_body_size [^"]*' --replace="client_max_body_size  ${upload_max_size}M  ;" --file="/etc/nginx/conf.d/$domain.d/$app.conf"
+    ynh_store_file_checksum "/etc/nginx/conf.d/$domain.d/$app.conf"
+    ynh_app_setting_set --key=upload_max_size --value="$upload_max_size"
+    ynh_print_info "The nginx config has been edited"
 }
 
 #=================================================
-# SPECIFIC SETTERS FOR TOML SHORT KEYS
+# ADD VOLUME SERVERS
 #=================================================
-set__prices() {
 
-    #---------------------------------------------
-    # IMPORTANT: setters are triggered only if a change is detected
-    #---------------------------------------------
-    for price in $(echo "$prices" | sed "s/,/ /"); do
-        frequency=$(echo "$price" | cut -d/ -f1)
-        currency=$(echo "$price" | cut -d/ -f2)
-        price_id=$(echo "$price" | cut -d/ -f3)
-        sed "d/DONATION\['$frequency'\]\['$currency'\]" "$install_dir/settings.py"
+run__extra_volume_add() {
 
-        echo "DONATION['$frequency']['$currency'] = '$price_id'" >> "$install_dir/settings.py"
-    done
+ynh_print_info "Adding volume.."
 
-    #---------------------------------------------
-    # IMPORTANT: to be able to upgrade properly, you have to save the value in settings too
-    #---------------------------------------------
-    ynh_app_setting_set --key=prices --value="$prices"
+## set port
+extra_volume_port=8081
+while true; do
+  if ss --numeric --listening --tcp --udp | awk '{print$5}' | grep --quiet --extended-regexp ":$extra_volume_port$"; then
+    ynh_print_info "$extra_volume_port is already in use. Chosing another port..."
+    extra_volume_port=$((extra_volume_port + 1))
+  elif grep -q "port: '$extra_volume_port'" /etc/yunohost/apps/*/settings.yml; then
+    ynh_print_info "$extra_volume_port is already in use. Chosing another port..."
+    extra_volume_port=$((extra_volume_port + 1))
+else
+    ynh_print_info "Allocating $extra_volume_port for the volume."
+    break
+fi
+done
+
+## create volume service
+test -n "${extra_volume_dir}" || ynh_die "You must provide a valid path."
+last_index=$(ls /etc/systemd/system/ | grep -oP "^${app}-volume@\d+\.service\$" | grep -oP "\d+" | sort -n | tail -1)
+next_index=$(( ${last_index:-0} + 1 ))
+
+ynh_config_add_systemd --service="$app-volume@${next_index}" --template="extra_volume.service"
+yunohost service add "$app-volume@${next_index}" --description="SeaweedFS Volume ${next_index}" --log="/var/log/$app/$app-volume@${next_index}.log"
+systemctl daemon-reload
+ynh_app_setting_set --key="$app-volume@${next_index}_port" --value="$extra_volume_port"
+ynh_systemctl --service="$app-volume@${next_index}" --action="start"
+}
+
+run__delete_volume() {
+    test -n "${volume_id:-}" || return 0
+    ynh_print_info "Removing volume ${volume_id}"
+    volume="${app}-volume@${volume_id}"
+    yunohost service stop "$volume"
+    yunohost service remove "$volume"
+    ynh_safe_rm /etc/systemd/system/$volume.service
+    ynh_app_setting_delete --key="${volume}_port" 2>/dev/null || true
+    ynh_print_info "$volume removed."
+    systemctl daemon-reload     
+}
+
+run__add_worker() {
+last_index=$(ls /etc/systemd/system/ | grep -oP "^${app}-worker@\d+\.service\$" | grep -oP "\d+" | sort -n | tail -1)
+next_index=$(( ${last_index:-0} + 1 ))
+ynh_config_add_systemd --service="$app-worker@${next_index}" --template="worker.service"
+yunohost service add "$app-worker@${next_index}" --description="SeaweedFS worker ${next_index}" --log="/var/log/$app/$app-worker@${next_index}.log"
+systemctl daemon-reload
+ynh_app_setting_set --key="$app-worker@${next_index}" --value="$app-worker@${next_index}"
+ynh_systemctl --service="$app-worker@${next_index}" --action="start"
+( sleep 5 && pushd /var/www/seaweedfs && mv worker.id worker@${next_index}.id && popd ) &
+}
+
+
+run__delete_worker() {
+    test -n "${worker_id:-}" || return 0
+    ynh_print_info "Removing worker ${worker_id}"
+    worker="${app}-worker@${worker_id}"
+    yunohost service stop "$worker"
+    yunohost service remove "$worker"
+    ynh_safe_rm /etc/systemd/system/$worker.service
+    ynh_app_setting_delete --key="${worker}" 2>/dev/null || true
+    ynh_app_setting_delete --key=checksum__etc_systemd_system_${worker}.service
+    ynh_print_info "$worker removed."
+    systemctl daemon-reload
+    pushd "install_dir"
+    rm worker@${worker_id}.id
+    popd
+    systemctl restart seaweedfs-admin
 }
 
 #=================================================
-ynh_app_config_run "$1"
+
+ynh_app_config_run $1

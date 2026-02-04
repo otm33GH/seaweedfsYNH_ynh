@@ -1,1 +1,2 @@
-This is a dummy disclaimer to display prior to any upgrade
+Existing workers will be removed.  
+Only the default worker will be created.  

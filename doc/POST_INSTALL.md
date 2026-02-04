@@ -1,7 +1,3 @@
-This is a dummy disclaimer to display after the install
+:wrench: The __admin URL__ is __<https://__DOMAIN____PATH__admin>__. Only __admin users__ are allowed.  
+:key: The API URL is <https://__DOMAIN____PATH__>.  
 
-The app url is <https://__DOMAIN____PATH__>
-
-The app install dir is `__INSTALL_DIR__`
-
-The app id is `__ID__`

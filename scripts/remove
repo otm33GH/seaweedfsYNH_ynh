@@ -7,45 +7,58 @@
 source _common.sh
 source /usr/share/yunohost/helpers
 
-### Settings are automatically loaded as bash variables
-### in every app script context, therefore typically these will exist:
-### - $domain
-### - $path
-### - $language
-### - $install_dir
-### - $port
-### ...
-
-### For remove operations:
-### - the core will deprovision every resource defined in the manifest **after** this script is ran
-### this includes removing the install directory, and data directory (if --purge was used)
-
 #=================================================
 # REMOVE SYSTEM CONFIGURATION
 #=================================================
 ynh_script_progression "Removing system configurations related to $app..."
 
-### This should be a symetric version of what happens in the install script
-
-ynh_config_remove_fail2ban
+# ynh_config_remove_fail2ban
 
 ynh_config_remove_logrotate
 
 # Remove the service from the list of services known by YunoHost (added from `yunohost service add`)
-if ynh_hide_warnings yunohost service status "$app" >/dev/null; then
-    yunohost service remove "$app"
+ynh_script_progression "Removing system configurations related to $app..."
+
+ynh_systemctl --service="$app-filer" --action="stop" --log_path="systemd"
+ynh_systemctl --service="$app-master" --action="stop" --log_path="systemd"
+ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
+
+for index_volume in "${volume_index[@]}"; do
+ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="systemd"
+sleep 5
+yunohost service remove "$app-volume@$index_volume"
+done
+
+for index_worker in "${worker_index[@]}"; do
+ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
+sleep 5
+yunohost service remove "$app-worker@$index_worker"
+done
+
+ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
+
+if ynh_hide_warnings yunohost service status "$app-filer" >/dev/null; then
+    yunohost service remove "$app-filer"
 fi
-ynh_config_remove_systemd
+ynh_config_remove_systemd "$app-filer"
+
+if ynh_hide_warnings yunohost service status "$app-master" >/dev/null; then
+    yunohost service remove "$app-master"
+fi
+ynh_config_remove_systemd "$app-master"
+
+if ynh_hide_warnings yunohost service status "$app-admin" >/dev/null; then
+    yunohost service remove "$app-admin"
+fi
+ynh_config_remove_systemd "$app-admin"
+
+if ynh_hide_warnings yunohost service status "$app-s3" >/dev/null; then
+    yunohost service remove "$app-s3"
+fi
+ynh_config_remove_systemd "$app-s3"
 
 ynh_config_remove_nginx
-
-ynh_config_remove_phpfpm
-
-# Remove other various files specific to the app... such as:
-
-ynh_safe_rm "/etc/cron.d/$app"
-
-ynh_safe_rm "/etc/$app"
+ynh_systemctl --service=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

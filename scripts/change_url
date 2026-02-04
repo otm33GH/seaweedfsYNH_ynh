@@ -16,7 +16,16 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression "Stopping $app's systemd service..."
 
-ynh_systemctl --service="$app" --action="stop"
+ynh_systemctl --service="$app-master" --action="stop" --log_path="systemd"
+for index_volume in "${volume_index[@]}"; do
+	ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="systemd"
+done
+ynh_systemctl --service="$app-filer" --action="stop" --log_path="systemd"
+ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
+for index_worker in "${worker_index[@]}"; do
+	ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
+done
+ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 
 #=================================================
 # MODIFY URL IN NGINX CONF
@@ -33,11 +42,25 @@ ynh_config_change_url_nginx
 ## do any changes to files that reference specific installation domain/path, i.e. regenerate configs etc
 
 #=================================================
-# START SYSTEMD SERVICE
+# RELOAD NGINX AND THE APP SERVICES
 #=================================================
-ynh_script_progression "Starting $app's systemd service..."
+ynh_script_progression "Reloading $app's services and NGINX web server..."
 
-ynh_systemctl --service="$app" --action="start"
+ynh_systemctl --service="$app-master" --action="start"
+ynh_systemctl --service="$app-filer" --action="start"
+
+for index_volume in "${volume_index[@]}"; do
+	ynh_systemctl --service="$app-volume@$index_volume" --action="start"
+done
+
+for index_worker in "${worker_index[@]}"; do
+	ynh_systemctl --service="$app-worker@$index_worker" --action="start"
+done
+
+ynh_systemctl --service="$app-admin" --action="start"
+ynh_systemctl --service="$app-s3" --action="start"
+
+ynh_systemctl --service=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
