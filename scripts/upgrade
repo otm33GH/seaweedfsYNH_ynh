@@ -97,10 +97,6 @@ for index_worker in "${worker_index[@]}"; do
 done
 ynh_systemctl --service="$app-admin" --action="start"
 
-pushd "$install_dir"
-sleep 5
-mv worker.id worker@${next_index}.id
-popd
 
 #=================================================
 # END OF SCRIPT
