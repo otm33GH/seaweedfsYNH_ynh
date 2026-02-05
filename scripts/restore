@@ -35,7 +35,7 @@ ynh_script_progression "Restoring $app's services..."
 
 #### b. volumes
     ynh_restore "/etc/systemd/system/$app-volume.service"
-    systemctl enable "$app-volume@.service" --quiet
+    systemctl enable "$app-volume.service" --quiet
     yunohost service add "$app-volume" --description="SeaweedFS volume" --log="/var/log/$app/$app-volume.log"
   done
 
