@@ -12,8 +12,6 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression "Removing system configurations related to $app..."
 
-### This should be a symetric version of what happens in the install script
-
 # ynh_config_remove_fail2ban
 
 ynh_config_remove_logrotate
@@ -29,19 +27,18 @@ for index_volume in "${volume_index[@]}"; do
 ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="systemd"
 sleep 5
 yunohost service remove "$app-volume@$index_volume"
+ynh_safe_rm /etc/systemd/system/$app-volume@$index_volume.service
 done
 
 for index_worker in "${worker_index[@]}"; do
 ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
 sleep 5
 yunohost service remove "$app-worker@$index_worker"
+ynh_safe_rm /etc/systemd/system/$app-worker@$index_worker.service
+
 done
 
-
-
 ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
-
-
 
 if ynh_hide_warnings yunohost service status "$app-filer" >/dev/null; then
     yunohost service remove "$app-filer"
@@ -65,7 +62,6 @@ ynh_config_remove_systemd "$app-s3"
 
 ynh_config_remove_nginx
 ynh_systemctl --service=nginx --action=reload
-
 
 #=================================================
 # END OF SCRIPT

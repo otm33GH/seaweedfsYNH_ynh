@@ -18,12 +18,12 @@ ynh_script_progression "Stopping $app's systemd service..."
 
 ynh_systemctl --service="$app-master" --action="stop" --log_path="systemd"
 for index_volume in "${volume_index[@]}"; do
-ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="systemd"
+	ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="systemd"
 done
 ynh_systemctl --service="$app-filer" --action="stop" --log_path="systemd"
 ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
 for index_worker in "${worker_index[@]}"; do
-ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
+	ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
 done
 ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 
@@ -31,8 +31,10 @@ ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 # MODIFY URL IN NGINX CONF
 #=================================================
 ynh_script_progression "Updating NGINX web server configuration..."
+
 # this will most likely adjust NGINX config correctly
 ynh_config_change_url_nginx
+
 #=================================================
 # SPECIFIC MODIFICATIONS
 #=================================================
@@ -48,19 +50,17 @@ ynh_systemctl --service="$app-master" --action="start"
 ynh_systemctl --service="$app-filer" --action="start"
 
 for index_volume in "${volume_index[@]}"; do
-ynh_systemctl --service="$app-volume@$index_volume" --action="start"
+	ynh_systemctl --service="$app-volume@$index_volume" --action="start"
 done
 
 for index_worker in "${worker_index[@]}"; do
-ynh_systemctl --service="$app-worker@$index_worker" --action="start"
+	ynh_systemctl --service="$app-worker@$index_worker" --action="start"
 done
 
 ynh_systemctl --service="$app-admin" --action="start"
 ynh_systemctl --service="$app-s3" --action="start"
 
 ynh_systemctl --service=nginx --action=reload
-
-
 
 #=================================================
 # END OF SCRIPT

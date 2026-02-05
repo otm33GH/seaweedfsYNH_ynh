@@ -21,7 +21,6 @@ ynh_script_progression "Setting up source files..."
 
 ynh_setup_source --dest_dir="$install_dir"
 
-
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
@@ -54,23 +53,24 @@ ynh_systemctl --service="$app-s3" --action="start"
 ynh_systemctl --service="$app-worker@$next_index" --action="start"
 ynh_systemctl --service="$app-admin" --action="start"
 
-
 # Use logrotate to manage application logfile(s)
 ynh_config_add_logrotate
 
 # Create a dedicated Fail2Ban config
 # ynh_config_add_fail2ban --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
 
-
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
 
 ynh_config_add_nginx
+
 ynh_systemctl --service=nginx --action=reload
-sleep 5
+
+sleep 10
+
 pushd "$install_dir"
-mv worker.id "worker@${next_index}.id"
+	mv worker.id "worker@${next_index}.id"
 popd
 
 #=================================================

@@ -2,21 +2,21 @@ packaging_format = 2
 
 id = "seaweedfs"
 name = "SeaweedFS"
-description.en = "SeaweedFS is a versatile and efficient storage system"
-description.fr = "SeaweedFS is a versatile and efficient storage system"
+description.en = "Versatile and efficient storage system"
+description.fr = "Système de stockage polyvalent et efficace"
 
-version = "4.07~ynh1"
+version = "4.09~ynh1"
 
-maintainers = [""]
+maintainers = [ ]
 
 [upstream]
-license = "Apache License 2.0" # you can see the available licenses identifiers list here: https://spdx.org/licenses/
+license = "Apache-2.0"
 website = "https://seaweedfs.com/"
 userdoc = "https://github.com/seaweedfs/seaweedfs/wiki"
 code = "https://github.com/seaweedfs/seaweedfs"
 
 [integration]
-yunohost = ">= 12.0.9"
+yunohost = ">= 12.1.38"
 helpers_version = "2.1"
 architectures = ['amd64']
 multi_instance = false
@@ -29,6 +29,7 @@ ram.build = "200M"
 ram.runtime = "200M"
 
 [install]
+
     [install.domain]
     type = "domain"
 
@@ -37,14 +38,15 @@ ram.runtime = "200M"
     default = "visitors"
    
 [resources]
+
     [resources.sources.main]
+    in_subdir = false
+    amd64.url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.09/linux_amd64.tar.gz"
+    amd64.sha256 = "ffa77c59375be2a51253c70f2f145a1d9d303404d29c392406993bce65bb3c17"
+    arm64.url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.09/linux_arm64.tar.gz"
+    arm64.sha256 = "37af21257f2c2b86d6c875d246e37ce5ea33a7bdaa7aaf47e19642e7e4d05157"
 
-   url = "https://github.com/seaweedfs/seaweedfs/releases/download/4.07/linux_amd64.tar.gz"
-   sha256 = "61c8a132c6753cc6726ab6dcc761e0fb2ae2bf7310b1276e82427f4a33dc2a7b"       
-   autoupdate.strategy = "latest_github_tag"
-   in_subdir = false
-   
-
+    autoupdate.strategy = "latest_github_tag"
    
     [resources.system_user]
 
@@ -54,7 +56,6 @@ ram.runtime = "200M"
     subdirs = ["datadir"]
 
     [resources.permissions]
-
     main.url = "/"
     admin.url = "/admin"
     admin.allowed = "admins"
@@ -66,4 +67,3 @@ ram.runtime = "200M"
     filer.default = 8888
     volume.default = 8080
     api.default = 8333 # port pour s3
-    

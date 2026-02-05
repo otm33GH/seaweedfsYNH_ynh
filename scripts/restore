@@ -15,21 +15,9 @@ ynh_script_progression "Restoring the app main directory..."
 
 ynh_restore "$install_dir"
 
-### $install_dir will automatically be initialized with some decent
-### permissions by default... however, you may need to recursively reapply
-### ownership to all files such as after the ynh_setup_source step
-chown -R "$app:www-data" "$install_dir"
 next_index=1
-#=================================================
-# RESTORE THE DATA DIRECTORY
-#=================================================
-ynh_script_progression "Restoring the data directory..."
 
-#ynh_restore "$data_dir"
-
-### (Same as for install dir)
 chown -R "$app:$app" "$data_dir"
-
 #=================================================
 # RESTORE SYSTEM CONFIGURATION
 #=================================================
@@ -43,25 +31,30 @@ ynh_script_progression "Restoring $app's services..."
 #### a. master
   ynh_restore "/etc/systemd/system/$app-master.service"
   systemctl enable "$app-master.service" --quiet
+  yunohost service add "$app-master" --description="SeaweedFS Master" --log="/var/log/$app/$app-master.log"
 
 #### b. volumes
-for index_volume in "${volume_index[@]}"; do
-  ynh_restore "/etc/systemd/system/$app-volume@$index_volume.service"
-  systemctl enable "$app-volume@$index_volume.service" --quiet
-done
+  for index_volume in "${volume_index[@]}"; do
+    ynh_restore "/etc/systemd/system/$app-volume@$index_volume.service"
+    systemctl enable "$app-volume@$index_volume.service" --quiet
+    yunohost service add "$app-volume@$index_volume" --description="SeaweedFS volume@$index_volume" --log="/var/log/$app/$app-volume@$index_volume.log"
+  done
 
 #### c. filer
   ynh_restore "/etc/systemd/system/$app-filer.service"
   systemctl enable "$app-filer.service" --quiet
+  yunohost service add "$app-filer" --description="SeaweedFS Filer" --log="/var/log/$app/$app-filer.log"
 
 #### d. s3 API
   ynh_restore "/etc/systemd/system/$app-s3.service"
   systemctl enable "$app-s3.service" --quiet
+  yunohost service add "$app-s3" --description="SeaweedFS S3 API" --log="/var/log/$app/$app-s3.log"
 
 #### e. recreate default worker
 
-ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
-yunohost service add "$app-worker@$next_index" --description="SeaweedFS worker@$next_index" --log="/var/log/$app/$app-worker@${next_index}.log"
+  ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
+  yunohost service add "$app-worker@$next_index" --description="SeaweedFS worker@$next_index" --log="/var/log/$app/$app-worker@${next_index}.log"
+  yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var/log/$app/$app-admin.log"
 
 #### f. admin
   ynh_restore "/etc/systemd/system/$app-admin.service"
@@ -72,19 +65,6 @@ ynh_restore "/etc/logrotate.d/$app"
 touch /var/log/$app/$app.log
 chown -R $app:$app /var/log/$app/
 
-yunohost service add "$app-master" --description="SeaweedFS Master" --log="/var/log/$app/$app-master.log"
-yunohost service add "$app-filer" --description="SeaweedFS Filer" --log="/var/log/$app/$app-filer.log"
-
-for index_volume in "${volume_index[@]}"; do
-yunohost service add "$app-volume@$index_volume" --description="SeaweedFS volume@$index_volume" --log="/var/log/$app/$app-volume@$index_volume.log"
-done
-for index_worker in "${worker_index[@]}"; do
-yunohost service add "$app-worker@$index_worker" --description="SeaweedFS worker@$index_worker" --log="/var/log/$app/$app-worker@$index_worker.log"
-done
-yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var/log/$app/$app-admin.log"
-yunohost service add "$app-s3" --description="SeaweedFS S3 API" --log="/var/log/$app/$app-s3.log"
-
-
 #=================================================
 # RELOAD NGINX AND THE APP SERVICES
 #=================================================
@@ -93,7 +73,7 @@ ynh_script_progression "Reloading $app's services and NGINX web server..."
 ynh_systemctl --service="$app-master" --action="start"
 
 for index_volume in "${volume_index[@]}"; do
-ynh_systemctl --service="$app-volume@$index_volume" --action="start"
+  ynh_systemctl --service="$app-volume@$index_volume" --action="start"
 done
 
 ynh_systemctl --service="$app-filer" --action="start"
@@ -108,6 +88,7 @@ pushd "$install_dir"
 sleep 5
 mv worker.id worker@${next_index}.id
 popd
+
 #=================================================
 # END OF SCRIPT
 #=================================================
