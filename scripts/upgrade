@@ -39,14 +39,20 @@ for index_worker in "${worker_index[@]}"; do
     popd
 done
 
-ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
-
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 ynh_script_progression "Upgrading source files..."
 
 ynh_setup_source --dest_dir="$install_dir" --full_replace=1
+
+#### Recreate default worker
+
+  ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
+  yunohost service add "$app-worker@$next_index" --description="SeaweedFS worker@$next_index" --log="/var/log/$app/$app-worker@${next_index}.log"
+  yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var/log/$app/$app-admin.log"
+  
+  ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 
 #=================================================
 # CONFIG FILES
@@ -73,6 +79,8 @@ done
 touch /var/log/$app/$app-admin.log
 
 chown -R $app:$app /var/log/$app/
+
+
 
 #=================================================
 # START SYSTEMD SERVICE
