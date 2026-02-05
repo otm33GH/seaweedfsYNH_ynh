@@ -8,6 +8,12 @@ ynh_print_info "Declaring files to be backed up..."
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
+for index_worker in "${worker_index[@]}"; do
+ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
+sleep 5
+yunohost service remove "$app-worker@$index_worker"
+ynh_safe_rm 
+done
 
 ynh_backup "$install_dir"
 
