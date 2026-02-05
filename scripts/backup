@@ -12,7 +12,7 @@ for index_worker in "${worker_index[@]}"; do
 ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
 sleep 5
 yunohost service remove "$app-worker@$index_worker"
-ynh_safe_rm 
+ynh_safe_rm worker@${worker_id}.id
 done
 
 ynh_backup "$install_dir"
