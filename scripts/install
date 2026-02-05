@@ -26,10 +26,10 @@ ynh_setup_source --dest_dir="$install_dir"
 #=================================================
 
 ynh_config_add_systemd --service="$app-master" --template="master.service"
-ynh_config_add_systemd --service="$app-volume@$next_index" --template="volume.service"
+ynh_config_add_systemd --service="$app-volume" --template="volume.service"
 ynh_config_add_systemd --service="$app-filer" --template="filer.service"
 ynh_config_add_systemd --service="$app-s3" --template="s3.service"
-ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
+ynh_config_add_systemd --service="$app-worker" --template="worker.service"
 ynh_config_add_systemd --service="$app-admin" --template="admin.service"
 
 ynh_app_setting_set --app=$app --key=upload_max_size --value=$upload_max_size
