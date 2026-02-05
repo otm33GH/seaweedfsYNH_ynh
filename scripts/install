@@ -69,7 +69,7 @@ ynh_systemctl --service=nginx --action=reload
 
 sleep 5
 
-pushd "$data_dir"
+pushd "$install_dir"
 	mv worker.id "worker@${next_index}.id"
 popd
 
