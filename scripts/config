@@ -57,18 +57,17 @@ next_index=$(( ${last_index:-0} + 1 ))
 ynh_config_add_systemd --service="$app-volume@${next_index}" --template="extra_volume.service"
 yunohost service add "$app-volume@${next_index}" --description="SeaweedFS Volume ${next_index}" --log="/var/log/$app/$app-volume@${next_index}.log"
 systemctl daemon-reload
-ynh_app_setting_set --key="$app-volume@${next_index}_port" --value="$extra_volume_port"
+ynh_app_setting_set --key="port_volume_${next_index}" --value="$extra_volume_port"
 ynh_systemctl --service="$app-volume@${next_index}" --action="start"
 }
 
 run__delete_volume() {
     test -n "${volume_id:-}" || return 0
     ynh_print_info "Removing volume ${volume_id}"
-    volume="${app}-volume@${volume_id}"
     yunohost service stop "$volume"
     yunohost service remove "$volume"
     ynh_safe_rm /etc/systemd/system/$volume.service
-    ynh_app_setting_delete --key="${volume}_port" 2>/dev/null || true
+    ynh_app_setting_delete --key="port_volume_${volume_id}" 2>/dev/null || true
     ynh_print_info "$volume removed."
     systemctl daemon-reload     
 }
