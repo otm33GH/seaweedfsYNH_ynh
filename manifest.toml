@@ -65,5 +65,5 @@ ram.runtime = "200M"
     admin.default = 23646
     master.default = 9333
     filer.default = 8888
-    volume.default = 8080
+    volume_1.default = 8080
     api.default = 8333 # port pour s3
