@@ -45,7 +45,7 @@ AWS_SECRET_ACCESS_KEY=__ADMIN_SECRET__
 #### Nextcloud
 Admin settings > Add External storage > S3 Storage > Key access  
 * choose a bucket name
-* set as endpoint URL : https://__DOMAIN__
+* set as endpoint URL : __DOMAIN__
 * tick `Active pathstyle`
 * Key id : `__ADMIN_KEY__`
 * Secret key: `__ADMIN_SECRET__`
