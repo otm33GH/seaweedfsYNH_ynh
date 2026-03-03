@@ -74,6 +74,7 @@ ram.runtime = "200M"
     subdirs = ["datadir"]
 
     [resources.permissions]
+    main.url = "/"
     admin.url = "/admin"
     admin.allowed = "admins"
     admin.auth_header = false
