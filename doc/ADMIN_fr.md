@@ -53,7 +53,7 @@ Paramètres d'administration > Stockage externe > Stockage S3 > Clé d'accès.
 * Key id : `__ADMIN_KEY__`
 * Secret key: `__ADMIN_SECRET__`
 #### Peertube
-* Éditer `var/www/peertube/config/production.yaml` :
+* Éditer `/var/www/peertube/config/production.yaml` :
   - version path_style
 ```
 object_storage:
