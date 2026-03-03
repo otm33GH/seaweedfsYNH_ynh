@@ -44,13 +44,12 @@ ynh_script_progression "Restoring $app's services..."
 #### b. volumes
   for volume in "$YNH_CWD"/etc/systemd/system/"${app}"-volume@*.service; do
       [[ -e "$volume" ]] || continue
-      volume_name=$(basename "$volume")
-      echo "$volume_name"
-      serv="${volume_name%.service}"
+      serv=$(basename "$volume")
+      volume_name="${serv%.service}"
       ynh_restore "/etc/systemd/system/$serv"
-      systemctl enable "$serv" --quiet
-      yunohost service add  "$serv" --description="SeaweedFS $serv" --log="/var/log/$app/$serv.log"
-      ynh_systemctl --service="$serv" --action="start"
+      systemctl enable "$volume_name" --quiet
+      yunohost service add  "$volume_name" --description="SeaweedFS $volume_name" --log="/var/log/$app/$volume_name.log"
+      ynh_systemctl --service="$volume_name" --action="start"
   done
 
 #### c. filer
