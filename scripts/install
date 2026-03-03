@@ -12,7 +12,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 upload_max_size=500
-volume_index=1
+index_volume=1
 admin_key=$(ynh_string_random --length=20)
 admin_secret=$(ynh_string_random --length=40)
 ynh_app_setting_set --app=$app --key=admin_key --value=$admin_key
@@ -55,7 +55,7 @@ yunohost service add "$app-admin" --description="SeaweedFS Admin UI" --log="/var
 ynh_script_progression "Starting $app's systemd service..."
 
 ynh_systemctl --service="$app-master" --action="start"
-ynh_systemctl --service="$app-volume@$next_index" --action="start"
+ynh_systemctl --service="$app-volume@$index_volume" --action="start"
 ynh_systemctl --service="$app-filer" --action="start"
 ynh_systemctl --service="$app-s3" --action="start"
 ynh_systemctl --service="$app-worker@$next_index" --action="start"
