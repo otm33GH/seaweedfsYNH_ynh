@@ -18,6 +18,7 @@ admin_key=$(ynh_string_random --length=20)
 admin_secret=$(ynh_string_random --length=40)
 ynh_app_setting_set --app=$app --key=admin_key --value=$admin_key
 ynh_app_setting_set --app=$app --key=admin_secret --value=$admin_secret
+allowed_urls=""
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
