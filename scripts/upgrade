@@ -53,9 +53,7 @@ admin_key=$(ynh_app_setting_get --app=$app --key=admin_key)
 ynh_config_add --template="config.json" --destination="$install_dir/config.json"
 
 #### Recreate default worker
-
-  ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
-
+ynh_config_add_systemd --service="$app-worker@$next_index" --template="worker.service"
 
 #=================================================
 # CONFIG FILES
@@ -82,7 +80,6 @@ done
 touch /var/log/$app/$app-admin.log
 
 chown -R $app:$app /var/log/$app/
-
 
 #=================================================
 # START SYSTEMD SERVICE

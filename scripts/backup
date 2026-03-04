@@ -8,6 +8,7 @@ ynh_print_info "Declaring files to be backed up..."
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
+
 for index_worker in "${worker_index[@]}"; do
     ynh_systemctl --service="$app-worker@${index_worker}" --action="stop" --log_path="systemd"
     sleep 5
@@ -21,7 +22,6 @@ for index_worker in "${worker_index[@]}"; do
 done
 
 ynh_backup "$install_dir"
-
 
 #=================================================
 # BACKUP THE DATA DIR

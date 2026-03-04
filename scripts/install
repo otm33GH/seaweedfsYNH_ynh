@@ -20,6 +20,7 @@ admin_secret=$(ynh_string_random --length=40)
 ynh_app_setting_set --app=$app --key=admin_key --value=$admin_key
 ynh_app_setting_set --app=$app --key=admin_secret --value=$admin_secret
 ynh_app_setting_set --app=$app --key=allowed_urls --value=$allowed_urls
+
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
@@ -30,8 +31,6 @@ ynh_setup_source --dest_dir="$install_dir"
 #=================================================
 # SYSTEM CONFIGURATION
 #=================================================
-
-
 
 ynh_config_add --template="config.json" --destination="$install_dir/config.json"
 #ynh_config_add --template="ldap_config.json" --destination="$install_dir/ldap_config.json"
