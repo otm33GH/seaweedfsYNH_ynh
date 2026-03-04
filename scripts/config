@@ -15,6 +15,22 @@ get__upload_max_size() {
 ynh_app_setting_get --key=upload_max_size
 }
 
+
+get__allowed_urls() {
+ynh_app_setting_get --key=allowed_urls
+}
+#=================================================
+# FRAME ANCESTORS
+#=================================================
+
+set__allowed_urls() {
+    ynh_replace --match='frame-ancestors [^"]*' --replace="frame-ancestors 'self' $allowed_urls" --file="/etc/nginx/conf.d/$domain.d/$app.conf"
+    ynh_store_file_checksum "/etc/nginx/conf.d/$domain.d/$app.conf"
+    ynh_app_setting_set --key=allowed_urls --value="$allowed_urls"
+    ynh_print_info "The nginx config has been edited"
+}
+
+
 #=================================================
 # UPLOAD MAX SIZE
 #=================================================
@@ -55,9 +71,9 @@ last_index=$(ls /etc/systemd/system/ | grep -oP "^${app}-volume@\d+\.service\$" 
 next_index=$(( ${last_index:-0} + 1 ))
 
 ynh_config_add_systemd --service="$app-volume@${next_index}" --template="extra_volume.service"
-yunohost service add "$app-volume@${next_index}" --description="SeaweedFS Volume ${next_index}" --log="/var/log/$app/$app-volume@${next_index}.log"
+yunohost service add "$app-volume@${next_index}" --description="SeaweedFS volume@${next_index}" --log="/var/log/$app/$app-volume@${next_index}.log"
 systemctl daemon-reload
-ynh_app_setting_set --key="$app-volume@${next_index}_port" --value="$extra_volume_port"
+ynh_app_setting_set --key="port_volume_${next_index}" --value="$extra_volume_port"
 ynh_systemctl --service="$app-volume@${next_index}" --action="start"
 }
 
@@ -68,7 +84,7 @@ run__delete_volume() {
     yunohost service stop "$volume"
     yunohost service remove "$volume"
     ynh_safe_rm /etc/systemd/system/$volume.service
-    ynh_app_setting_delete --key="${volume}_port" 2>/dev/null || true
+    ynh_app_setting_delete --key="port_volume_${volume_id}" 2>/dev/null || true
     ynh_print_info "$volume removed."
     systemctl daemon-reload     
 }
@@ -77,11 +93,11 @@ run__add_worker() {
 last_index=$(ls /etc/systemd/system/ | grep -oP "^${app}-worker@\d+\.service\$" | grep -oP "\d+" | sort -n | tail -1)
 next_index=$(( ${last_index:-0} + 1 ))
 ynh_config_add_systemd --service="$app-worker@${next_index}" --template="worker.service"
-yunohost service add "$app-worker@${next_index}" --description="SeaweedFS worker ${next_index}" --log="/var/log/$app/$app-worker@${next_index}.log"
+yunohost service add "$app-worker@${next_index}" --description="SeaweedFS worker@${next_index}" --log="/var/log/$app/$app-worker@${next_index}.log"
 systemctl daemon-reload
 ynh_app_setting_set --key="$app-worker@${next_index}" --value="$app-worker@${next_index}"
 ynh_systemctl --service="$app-worker@${next_index}" --action="start"
-( sleep 5 && pushd /var/www/seaweedfs && mv worker.id worker@${next_index}.id && popd ) &
+( sleep 5 && pushd $install_dir && mv worker.id worker@${next_index}.id && popd ) &
 }
 
 
