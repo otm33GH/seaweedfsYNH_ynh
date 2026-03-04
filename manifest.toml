@@ -52,8 +52,6 @@ ram.runtime = "200M"
     help.fr = "En fonction de l'espace disque disponible. Cahque bucket crée une collection de, par défaut, 7 volumes. Plusieurs serveurs de volumes peuvent être créés ultérieurement."
     type = "number"
     default = 100
-    min = 10
-    max = 100000
        
 [resources]
 
