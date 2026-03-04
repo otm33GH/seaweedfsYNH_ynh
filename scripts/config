@@ -15,6 +15,10 @@ get__upload_max_size() {
 ynh_app_setting_get --key=upload_max_size
 }
 
+
+get__allowed_urls() {
+ynh_app_setting_get --key=allowed_urls
+}
 #=================================================
 # FRAME ANCESTORS
 #=================================================
