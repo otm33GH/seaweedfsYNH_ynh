@@ -10,7 +10,7 @@ User=__APP__
 Group=__APP__
 WorkingDirectory=__INSTALL_DIR__/
 #EnvironmentFile=__INSTALL_DIR__/.env
-ExecStart=__INSTALL_DIR__/./weed master -port=__PORT_MASTER__
+ExecStart=__INSTALL_DIR__/./weed master -port=__PORT_MASTER__  -volumePreallocate -volumeSizeLimitMB=__VOLUME_SIZE__
 StandardOutput=append:/var/log/__APP__/__APP__-master.log
 StandardError=inherit
 
