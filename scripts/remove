@@ -36,6 +36,13 @@ for index_worker in "${worker_index[@]}"; do
     yunohost service remove "$app-worker@$index_worker"
     ynh_safe_rm /etc/systemd/system/$app-worker@$index_worker.service
 done
+# fallback
+if [ -f "/etc/systemd/system/$app-worker@1.service" ]; then
+    ynh_systemctl --service="$app-worker@1" --action="stop" --log_path="systemd"
+    sleep 5
+    yunohost service remove "$app-worker@1"
+    ynh_safe_rm /etc/systemd/system/$app-worker@1.service
+fi
 
 ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
 
