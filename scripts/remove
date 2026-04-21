@@ -19,10 +19,6 @@ ynh_config_remove_logrotate
 # Remove the service from the list of services known by YunoHost (added from `yunohost service add`)
 ynh_script_progression "Removing system configurations related to $app..."
 
-ynh_systemctl --service="$app-filer" --action="stop" --log_path="systemd"
-ynh_systemctl --service="$app-master" --action="stop" --log_path="systemd"
-ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
-
 for index_volume in "${volume_index[@]}"; do
     ynh_systemctl --service="$app-volume@$index_volume" --action="stop" --log_path="systemd"
     sleep 5
@@ -39,6 +35,10 @@ for index_worker in "${worker_index[@]}"; do
     ynh_safe_rm /etc/systemd/system/$app-worker@$index_worker.service
 done
 
+
+ynh_systemctl --service="$app-filer" --action="stop" --log_path="systemd"
+ynh_systemctl --service="$app-master" --action="stop" --log_path="systemd"
+ynh_systemctl --service="$app-admin" --action="stop" --log_path="systemd"
 ynh_systemctl --service="$app-s3" --action="stop" --log_path="systemd"
 
 if ynh_hide_warnings yunohost service status "$app-filer" >/dev/null; then
@@ -64,7 +64,7 @@ ynh_config_remove_systemd "$app-s3"
 ynh_config_remove_nginx
 ynh_systemctl --service=nginx --action=reload
 
-pkill -u $app || true
+#pkill -u $app || true
 #=================================================
 # END OF SCRIPT
 #=================================================
