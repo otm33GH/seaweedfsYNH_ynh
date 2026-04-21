@@ -29,7 +29,7 @@ done
 
 for index_worker in "${worker_index[@]}"; do
     ynh_systemctl --service="$app-worker@$index_worker" --action="stop" --log_path="systemd"
-    sleep 5
+    sleep 15
     yunohost service remove "$app-worker@$index_worker"
     systemctl disable "$app-worker@$index_worker"  --quiet
     ynh_safe_rm /etc/systemd/system/$app-worker@$index_worker.service
