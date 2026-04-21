@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-Restart=on-failure
-RestartSec=5s
+Restart=no
+RestartSec=15s
 TimeoutStopSec=600s
 User=__APP__
 Group=__APP__
