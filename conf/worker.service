@@ -6,7 +6,6 @@ After=network.target
 Type=simple
 Restart=no
 RestartSec=15s
-TimeoutStopSec=600s
 User=__APP__
 Group=__APP__
 WorkingDirectory=__INSTALL_DIR__/
