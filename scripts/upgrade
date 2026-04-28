@@ -133,7 +133,7 @@ ynh_systemctl --service="$app-admin" --action="start"
 sleep 30
 
 pushd "$install_dir"
-	mv worker.id "worker@${next_index}.id"
+	# mv worker.id "worker@${next_index}.id"
 popd
 
 #=================================================
